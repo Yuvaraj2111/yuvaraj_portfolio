@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 245 247 251;
+  --surface: 255 255 255;
+  --raised: 236 240 247;
+  --line: 214 221 233;
+  --ink: 14 19 32;
+  --muted: 82 92 112;
+  --cyan: 3 132 186;
+  --violet: 92 76 224;
+  --pulse: 6 160 120;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: 11 14 21;
+  --surface: 18 23 34;
+  --raised: 25 31 45;
+  --line: 38 46 64;
+  --ink: 231 236 245;
+  --muted: 141 152 173;
+  --cyan: 56 217 245;
+  --violet: 146 130 255;
+  --pulse: 52 232 170;
+  color-scheme: dark;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  body {
+    @apply bg-bg text-ink font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  ::selection { background: rgb(var(--cyan) / 0.3); }
+  :focus-visible {
+    outline: 2px solid rgb(var(--cyan));
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  .page { @apply mx-auto w-full max-w-page px-5 sm:px-8; }
+  .glass {
+    @apply border border-line/70 bg-surface/60 backdrop-blur-xl;
+  }
+  .tag {
+    @apply inline-flex items-center rounded-md border border-line bg-raised/60 px-2 py-1 font-mono text-[11px] text-muted;
+  }
+  .grain::before {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: .035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Rotating conic border used by the contact CTA */
+@property --angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+.glow-border {
+  position: relative;
+  border-radius: 1.75rem;
+  background:
+    linear-gradient(rgb(var(--surface)), rgb(var(--surface))) padding-box,
+    conic-gradient(from var(--angle), rgb(var(--line)), rgb(var(--cyan)), rgb(var(--violet)), rgb(var(--line)) 40%, rgb(var(--line))) border-box;
+  border: 1px solid transparent;
+  animation: spin-angle 7s linear infinite;
+}
+@keyframes spin-angle { to { --angle: 360deg; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.has-cursor, body.has-cursor a, body.has-cursor button { cursor: none; }
+}
